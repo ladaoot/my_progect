@@ -8,7 +8,15 @@
 <body>
 <header th:insert="basicComponent/header :: header"></header>
 <h1 th:text="${title}" />
+<div th:each="el : ${products}" class = "alert alert-info mt-2">
+    <img src="${el.pathToImg}" alt="Какая-то ошибка">
+    <h3 th:text="${el.name}"/>
+    <p th:text="${el.price}"/>
+    <a th:href="'/products'+${el.id}">Описание</a>
+</div>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
+
+
 
 </html>

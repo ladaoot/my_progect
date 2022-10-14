@@ -1,2 +1,18 @@
 server:
   port : 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/my_db
+    username: postgres
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+     ddl-auto: update
+    database-platform=org: hibernate.dialect.PostgreSQLDialect
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+      hbm2ddl:
+       auto: validate
