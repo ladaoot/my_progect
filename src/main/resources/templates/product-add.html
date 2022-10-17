@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'My Application'"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<header th:insert="basicComponent/header :: header"></header>
+<h3>Создать новый товар</h3>
+<form action="/products/add" method="post" enctype="multipart/form-data">
+    Название товарв: <input type="text" name="name"/><br><br>
+    Описание товара: <input type="text" name="description"/><br><br>
+    Цена: <input type="number" name="price"/><br><br>
+    Фотография товара: <input type="file" name="file"/><br><br>
+    <input type="submit" value="Добавить товар"/>
+</form>
+<footer th:insert="basicComponent/footer :: footer"></footer>
+</body>
+
+</html>

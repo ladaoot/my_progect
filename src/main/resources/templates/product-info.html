@@ -7,23 +7,15 @@
 </head>
 <body>
 <header th:insert="basicComponent/header :: header"></header>
-<div th:each="el : ${products}" class = "alert alert-info mt-2">
 
-    <div th:each="img : ${el.images}">
-        <img src="'/images/'+${img.id}" alt="Something wrong" width="20px" height="10px" >
+    <div th:each="img : ${images}">
+        <img src="'/images/'+${img.id}" alt="Something wrong" >
     </div>
 
     <h3 th:text="${el.name}"/>
     <p th:text="${el.price}"/>
-    <a th:href="'/products/'+${el.id}">Описание</a>
-</div>
-
-
-<a th:href = "'/products/add'">Добавить товар</a>
-
+    <h4 th:text ="${el.description}"/>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
-
-
 
 </html>

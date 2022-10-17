@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class InfoController {
 
     @GetMapping("/info")
-    public String home(Model model){
+    public String info(Model model){
+
         model.addAttribute("title","Information");
         return "info";
+
     }
 }
