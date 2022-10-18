@@ -10,9 +10,11 @@ spring:
   jpa:
     hibernate:
      ddl-auto: update
-    database-platform=org: hibernate.dialect.PostgreSQLDialect
+    database-platform=org: hibernate.dialect.PostgreSQL94Dialect
     properties.hibernate:
       show_sql: true
       format_sql: true
       hbm2ddl:
        auto: update
+  freemaker:
+    expose-request-attributes: true

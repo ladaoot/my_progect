@@ -8,13 +8,12 @@
 <body>
 <header th:insert="basicComponent/header :: header"></header>
 
-    <div th:each="img : ${images}">
-        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px">
-    </div>
+<div>
+    <h1 th:text="${user.name}"/>
+    <h2 th:text="${user.username}"/>
+    <h4 th:text ="${user.roles}"/>
+</div>
 
-    <h3 th:text="${el.name}"/>
-    <p th:text="${el.price}"/>
-    <h4 th:text ="${el.description}"/>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
 

@@ -1,13 +1,24 @@
 <div th:fragment="header">
 <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
     <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-        <span class="fs-4">Home Page</span>
+        <span class="fs-4">My Application</span>
     </a>
 
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 text-dark text-decoration-none" href="/">Home Page</a>
         <a class="me-3 py-2 text-dark text-decoration-none" href="/info">Info</a>
         <a class="me-3 py-2 text-dark text-decoration-none" href="/products">Products</a>
+        <div th:if ="${user.username}" class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a  th:href="'/user/'+${user.id}"><p th:text="${user.username}" class="me-3 py-2 text-dark text-decoration-none"/></a>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="/logout">LogOut</a>
+<!--            <form action="/logout" method="post">-->
+<!--                <input type="hidden" name="_csrf" value="${_csrf.token}">-->
+<!--                <input type="submit" value="Выйти"/>-->
+<!--            </form>-->
+        </div>
+        <div th:unless="${user.username}">
+        <a class="me-3 py-2 text-dark text-decoration-none" href="/login">LogIn</a>
+        </div>
     </nav>
 </div>
 </div>
