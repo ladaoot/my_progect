@@ -25,7 +25,12 @@ public class Product {
     private Integer price;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Image> images= new ArrayList<>();
+    private List<Image> images = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
 
     public void addImageToProduct(Image image) {
 
@@ -34,3 +39,21 @@ public class Product {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

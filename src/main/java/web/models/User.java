@@ -31,11 +31,20 @@ public class User implements UserDetails {
 
     private String password;
 
+    private boolean archive;
+
+    private String phoneNumber;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Bucket bucket;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
