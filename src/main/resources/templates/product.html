@@ -18,11 +18,14 @@
     </div>
     <h3 th:text="${el.name}"/>
     <p th:text="${el.price}"/>
-    <a th:href="'/products/'+${el.id}" >Описание</a>
+    <a th:href="'/products/description/'+${el.id}" >Description</a><br/><br/>
+    <form th:action="'user/'+${user.id}+'/bucket/add/'+${el.id}" method="post">
+    <button type="submit">Add to bucket</button>
+    </form>
 </div>
 
 <div th:each="role : ${user.roles}">
-<a th:href = "'/products/add'" th:if="${role.name().equals('ADMIN')}">Добавить товар</a>
+<a th:href = "'/products/add'" th:if="${role.name().equals('ADMIN')}">Add product</a>
 </div>
 
 <footer th:insert="basicComponent/footer :: footer"></footer>

@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .antMatchers("/login", "/registration").permitAll()
+                        .antMatchers("/login", "/registration","/","/info","/products","/products/description/**","/images/**").permitAll()
                         .antMatchers("/products/add").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated()

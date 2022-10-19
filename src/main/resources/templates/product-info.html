@@ -14,7 +14,16 @@
 
     <h3 th:text="${el.name}"/>
     <p th:text="${el.price}"/>
-    <h4 th:text ="${el.description}"/>
+<h4 th:text ="${el.description}"/>
+
+<form th:action="'user/'+${user.id}+'/bucket/add/'+${el.id}" method="post">
+    <button type="submit">Add to bucket</button>
+</form>
+
+<div th:each="role : ${user.roles}">
+    <a th:href = "'/products/'+${el.id}+'/delete'"  th:if="${role.name().equals('ADMIN')}">Delete product</a>
+    <a th:href = "'/products/'+${el.id}+'/update'" th:if="${role.name().equals('ADMIN')}">Update product</a>
+</div>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
 

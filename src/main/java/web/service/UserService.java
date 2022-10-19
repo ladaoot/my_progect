@@ -24,6 +24,11 @@ public class UserService  {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private BucketService bucketService;
+
+    private Long countGuest= Long.valueOf(0);
+
 
     public boolean createUser(User user){
         String email = user.getUsername();
@@ -32,7 +37,29 @@ public class UserService  {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(Role.USER);
         userRepository.save(user);
+        user.setBucket(bucketService.createBucket(user));
+        userRepository.save(user);
         return  true;
+    }
+
+    public User createGuest(){
+        User user =new User();
+        String username ="GUEST#"+countGuest;
+        var user1 =userRepository.findByUsername(username);
+        if(user1!=null){
+            return user1;
+        }else {
+        user.setUsername(username);
+        user.getRoles().add(Role.GUEST);
+        user.setArchive(false);
+        userRepository.save(user);}
+        return user;
+    }
+
+    public void deleteGuest(String username){
+        var user =userRepository.findByUsername(username);
+        userRepository.delete(user);
+        countGuest++;
     }
 
     public web.models.User getUserByPrincipal(Principal principal) {

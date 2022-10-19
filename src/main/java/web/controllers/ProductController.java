@@ -62,7 +62,7 @@ public class ProductController {
 
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/products/description/{id}")
     public String getInfo(Model model, @PathVariable("id") Long id, Principal principal){
 
         model.addAttribute("user", userService.getUserByPrincipal(principal));

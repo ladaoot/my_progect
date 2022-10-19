@@ -8,15 +8,16 @@
         <a class="me-3 py-2 text-dark text-decoration-none" href="/">Home Page</a>
         <a class="me-3 py-2 text-dark text-decoration-none" href="/info">Info</a>
         <a class="me-3 py-2 text-dark text-decoration-none" href="/products">Products</a>
-        <div th:if ="${user.username}" class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+        <div th:if ="${user.password}" class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
             <a  th:href="'/user/'+${user.id}"><p th:text="${user.username}" class="me-3 py-2 text-dark text-decoration-none"/></a>
+            <a class="me-3 py-2 text-dark text-decoration-none" th:href="'/user/'+${user.id}+'/bucket'">Your Bucket</a>
             <a class="me-3 py-2 text-dark text-decoration-none" href="/logout">LogOut</a>
 <!--            <form action="/logout" method="post">-->
 <!--                <input type="hidden" name="_csrf" value="${_csrf.token}">-->
 <!--                <input type="submit" value="Выйти"/>-->
 <!--            </form>-->
         </div>
-        <div th:unless="${user.username}">
+        <div th:unless="${user.password}" class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="me-3 py-2 text-dark text-decoration-none" href="/login">LogIn</a>
         </div>
     </nav>
