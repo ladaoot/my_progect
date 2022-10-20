@@ -1,23 +1,21 @@
 package web.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import web.models.role.Role;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@EqualsAndHashCode(exclude = "bucket")
+@ToString(exclude = {"bucket", "orders"})
 public class User implements UserDetails {
 
     @Id
@@ -41,8 +39,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY)
     private Bucket bucket;
+
+    @OneToMany
+    private List<Order> orders = new ArrayList<>();
 
 
     @Override

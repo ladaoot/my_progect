@@ -1,8 +1,6 @@
 package web.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,13 +10,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = "user")
 public class Bucket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
     @ManyToMany(cascade = CascadeType.ALL)

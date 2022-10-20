@@ -3,6 +3,7 @@ package web.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import web.models.role.OrderStatus;
@@ -17,13 +18,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name ="orders")
+@ToString(exclude = "user")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
 
@@ -37,7 +39,7 @@ public class Order {
 
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.REFRESH)
     private List<OrderDetails> orderDetails;
 
     @Enumerated(value = EnumType.STRING)

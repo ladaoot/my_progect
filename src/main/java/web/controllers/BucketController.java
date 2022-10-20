@@ -143,4 +143,6 @@ public class BucketController {
         return "redirect:/user/{id}/bucket";
 
     }
+
+
 }

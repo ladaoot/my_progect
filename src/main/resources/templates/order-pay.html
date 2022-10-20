@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'My Application'"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<header th:insert="basicComponent/header :: header"></header>
+<h1 th:text="Pay" />
+<form th:action="'/user/'+${user.id}+'/order/'+${order.id}+'/pay'" method="post">
+    <input type="submit" value="Pay">
+</form>
+<footer th:insert="basicComponent/footer :: footer"></footer>
+</body>
+
+</html>

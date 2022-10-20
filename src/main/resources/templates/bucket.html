@@ -28,6 +28,11 @@
                 <input type="submit" value="Clean bucket">
             </form>
         </div>
+        <div style="position:fixed; top:30%;  left:90%">
+            <form th:action="'/user/'+${user.id}+'/order/create'" method="get">
+                <input type="submit" value="Create order">
+            </form>
+        </div>
     </div>
 </div>
 <div th:unless="${not products.isEmpty()}">
