@@ -8,9 +8,8 @@
 <body>
 <header th:insert="basicComponent/header :: header"></header>
 <h1 th:text="${title}"/>
-<div th:if="${not products.isEmpty()}">
-    <div th:each="el : ${products}">
-        <h4 th:text="${el.product.id}"/>
+<div th:if="${not products.isEmpty()}" >
+    <div th:each="el : ${products}" class = "alert alert-info mt-2">
         <div th:each="img : ${el.product.images}">
             <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px">
         </div>
@@ -20,13 +19,22 @@
         <form th:action="'/user/'+${user.id}+'/bucket/add/'+${el.product.id}+'/add_more'" method="post">
             <input type="number" name="amount" th:value="${el.amount.longValue()}"/>
             <input type="submit" value="Update amount"/>
+        </form><br/>
+        <form th:action="'/user/'+${user.id}+'/bucket/add/'+${el.product.id}+'/delete'" method="post">
+            <input type="submit" value="Delete product">
         </form>
+        <div style="position:fixed; top:15%;  left:90%">
+            <form th:action="'/user/'+${user.id}+'/bucket/clean'" method="post">
+                <input type="submit" value="Clean bucket">
+            </form>
+        </div>
     </div>
 </div>
 <div th:unless="${not products.isEmpty()}">
     <p text="You don't have any products in the bucket"/>
     Add some <a href="/products">Products</a>
 </div>
+
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
 

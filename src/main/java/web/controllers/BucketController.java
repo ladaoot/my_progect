@@ -103,7 +103,7 @@ public class BucketController {
 
             Bucket bucket = userService.getUserByPrincipal(principal)
                     .getBucket();
-            bucket.setProducts(new ArrayList<ProductCount>());
+            bucket.getProducts().remove(productCount);
             bucketRepository.save(bucket);
             return "redirect:/user/{id}/bucket";
 
@@ -113,5 +113,34 @@ public class BucketController {
         productCount.setAmount(BigDecimal.valueOf(amount));
         productCountRepository.save(productCount);
         return "redirect:/user/{id}/bucket";
+    }
+
+    @PostMapping("/user/{id}/bucket/add/{product_id}/delete")
+    public String deleteProduct(Model model,Principal principal,@PathVariable("product_id") Long id){
+        Bucket bucket =userService.getUserByPrincipal(principal)
+                .getBucket();
+        ProductCount productCount = bucket
+                .getProducts()
+                .stream()
+                .filter(a->a.getProduct().getId().equals(id))
+                .findAny()
+                .get();
+
+        bucket.getProducts().remove(productCount);
+        bucketRepository.save(bucket);
+
+        return "redirect:/user/{id}/bucket";
+    }
+
+    @PostMapping("/user/{id}/bucket/clean")
+    public String cleanBucket(Model model,Principal principal){
+
+        Bucket bucket =userService.getUserByPrincipal(principal)
+                .getBucket();
+        bucket.setProducts(new ArrayList<>());
+        bucketRepository.save(bucket);
+
+        return "redirect:/user/{id}/bucket";
+
     }
 }
