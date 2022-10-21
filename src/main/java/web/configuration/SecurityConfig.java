@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .antMatchers("/login", "/registration","/","/info","/products","/products/description/**","/images/**").permitAll()
                         .antMatchers("/products/add").hasAuthority(ADMIN.getAuthority())
+                        .antMatchers("/order/update/**").hasAuthority(ADMIN.getAuthority())
                         .antMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().authenticated()
                 )

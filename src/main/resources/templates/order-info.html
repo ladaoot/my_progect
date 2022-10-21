@@ -13,6 +13,7 @@ Date of creation:<p th:text="${order.createdTime}"/>
 Status:<p th:text="${order.orderStatus}"/>
 Date of last update status:<p th:text="${order.updatedTime}"/>
 Address:<p th:text="${order.address}"/>
+User:<p th:text="${order.user.username}"/>
 
 <div th:each="detail : ${order.orderDetails}">
     <div th:each="img : ${detail.product.images}">
@@ -22,6 +23,13 @@ Address:<p th:text="${order.address}"/>
     Price: <p th:text="${detail.product.price}"/>
     Amount:<p th:text="${detail.amount}"/>
     <a th:href="'/products/description/'+${detail.product.id}" >Description</a><br/><br/>
+</div>
+<div th:each="role : ${user.roles}">
+<div th:if="${role.name().equals('ADMIN')}" style="position:fixed; top:15%;  left:90%">
+    <form th:action="'/order/update/'+${order.id}" method="get">
+        <input type="submit" value="Update order">
+    </form>
+</div>
 </div>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>

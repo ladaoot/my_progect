@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.models.Bucket;
-import web.models.Order;
-import web.models.OrderDetails;
-import web.models.User;
+import web.models.*;
 import web.models.role.OrderStatus;
 import web.repository.BucketRepository;
+import web.repository.OrderDetailsRepository;
 import web.repository.OrderRepository;
 import web.repository.UserRepository;
 import web.service.OrderService;
@@ -45,6 +43,9 @@ public class OrderController {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderDetailsRepository orderDetailsRepository;
 
 
     @GetMapping("/user/{id}/order/create")
@@ -98,47 +99,122 @@ public class OrderController {
         bucketRepository.save(bucket);
         userRepository.save(user);
 
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
 
-        redirectAttributes.addAttribute("order_id",order.getId());
+        redirectAttributes.addAttribute("order_id", order.getId());
 
         return "redirect:/user/{id}/order/{order_id}/pay";
     }
 
     @GetMapping("/user/{id}/order/{order_id}/pay")
-    public String returnAllForPay(Model model, Principal principal, @PathVariable("order_id") Long orderId){
-        model.addAttribute("user",userService.getUserByPrincipal(principal));
-        model.addAttribute("order",orderRepository.findById(orderId).get());
+    public String returnAllForPay(Model model, Principal principal, @PathVariable("order_id") Long orderId) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("order", orderRepository.findById(orderId).get());
         return "order-pay";
     }
 
     @PostMapping("/user/{id}/order/{order_id}/pay")
-    public String getPayed(Model model,@PathVariable("order_id") Long orderId,Principal principal){
-        Optional<Order> optionalOrder =orderRepository.findById(orderId);
+    public String getPayed(Model model, @PathVariable("order_id") Long orderId, Principal principal) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
-        if(optionalOrder.isEmpty()){
-            model.addAttribute("error","Order is not found");
+        if (optionalOrder.isEmpty()) {
+            model.addAttribute("error", "Order is not found");
             return "redirect:/";
         }
 
-        Order order =optionalOrder.get();
+        Order order = optionalOrder.get();
         order.setOrderStatus(OrderStatus.PAID);
         order.setUpdatedTime(LocalDateTime.now());
         orderRepository.save(order);
-        model.addAttribute("user",userService.getUserByPrincipal(principal));
-        model.addAttribute("order",order);
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("order", order);
         return "redirect:/user/{id}";
 
     }
 
 
-    @GetMapping("/user/{id}/order/{order_id}")
+    @GetMapping("/order/{order_id}")
     public String orderInfo(Model model, Principal principal,
-                            @PathVariable("order_id") Long orderId){
-        model.addAttribute("user",userService.getUserByPrincipal(principal));
-        model.addAttribute("order",orderRepository.findById(orderId).get());
+                            @PathVariable("order_id") Long orderId) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("order", orderRepository.findById(orderId).get());
         return "order-info";
 
+    }
+
+    @GetMapping("/order/update/{id}")
+    public String updateOrder(Model model, Principal principal, @PathVariable("id") Long id) {
+
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("order", orderRepository.findById(id).get());
+        return "order-update";
+
+    }
+
+    @PostMapping("/order/update/{id}")
+    public String updateOrderInformation(Model model, Principal principal,
+                                         @PathVariable("id") Long id, @RequestParam("address") String address,
+                                         @RequestParam("status") String status) {
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        Order order = orderRepository.findById(id).get();
+        order.setAddress(address);
+        if (!status.equalsIgnoreCase(order.getOrderStatus().name())) {
+            order.setOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
+            order.setUpdatedTime(LocalDateTime.now());
+        }
+        orderRepository.save(order);
+        model.addAttribute("order", order);
+        return "redirect:/order/{id}";
+    }
+
+    @PostMapping("/order/update/update_amount/{id}/{product_id}")
+    public String updateAmountOfProductInOrder(Model model, Principal principal,
+                                               @PathVariable("product_id") Long productId,
+                                               @PathVariable("id") Long orderId, @RequestParam("amount") Long amount) {
+        Order order = orderRepository.findById(orderId).get();
+
+        var product = order.getOrderDetails()
+                .stream()
+                .filter(a -> a.getProduct().getId().equals(productId))
+                .findAny()
+                .get();
+        if (amount <= 0) {
+            order.getOrderDetails().remove(product);
+
+            if (order.getOrderDetails().isEmpty()) {
+                order.setOrderStatus(OrderStatus.CANCELED);
+                order.setUpdatedTime(LocalDateTime.now());
+                orderRepository.save(order);
+                return "redirect:/order/{id}";
+            }
+            orderRepository.save(order);
+            return "redirect:/order/update/{id}";
+        }
+        product.setAmount(BigDecimal.valueOf(amount));
+        orderDetailsRepository.save(product);
+        return "redirect:/order/update/{id}";
+    }
+
+    @PostMapping("/order/update/delete/{id}/{product_id}")
+    public String deleteProductFromOrder(Model model, Principal principal,
+                                         @PathVariable("id") Long orderId,
+                                         @PathVariable("product_id") Long productId) {
+        Order order = orderRepository.findById(orderId).get();
+        var product = order.getOrderDetails()
+                .stream()
+                .filter(a -> a.getProduct().getId().equals(productId))
+                .findAny()
+                .get();
+        order.getOrderDetails().remove(product);
+
+        if (order.getOrderDetails().isEmpty()) {
+            order.setOrderStatus(OrderStatus.CANCELED);
+            order.setUpdatedTime(LocalDateTime.now());
+            orderRepository.save(order);
+            return "redirect:/order/{id}";
+        }
+        orderRepository.save(order);
+        return "redirect:/order/update/{id}";
     }
 
 }
