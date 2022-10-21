@@ -15,7 +15,7 @@ import java.util.*;
 @AllArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(exclude = "bucket")
-@ToString(exclude = {"bucket", "orders"})
+@ToString(exclude = {"bucket", "orders","actualCategories"})
 public class User implements UserDetails {
 
     @Id
@@ -44,6 +44,9 @@ public class User implements UserDetails {
 
     @OneToMany
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany
+    private List<Category> actualCategories = new ArrayList<>();
 
 
     @Override

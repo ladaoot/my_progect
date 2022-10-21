@@ -10,7 +10,7 @@
 
 <h1 th:text="${title}" />
 
-<div th:each="el : ${products}" class = "alert alert-info mt-2">
+<div th:if="${products}" th:each="el : ${products}" class = "alert alert-info mt-2">
 
     <div th:each="img : ${el.images}">
         <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px" ><br><br>
@@ -25,6 +25,19 @@
 
 <div th:each="role : ${user.roles}">
 <a th:href = "'/products/add'" th:if="${role.name().equals('ADMIN')}">Add product</a>
+</div>
+<div th:unless="${products}">
+
+</div>
+
+<div style="position:fixed; top:15%;  left:90%">
+    <form action="/products" method="post" th:object="${user}">
+        <div th:each="category : ${categories}">
+             <input type="checkbox" th:field="*{actualCategories}" th:value="${category.title}" />
+            <label th:text="${category.title}"/>
+        </div>
+        <input type="submit" value="Confirm">
+    </form>
 </div>
 
 <footer th:insert="basicComponent/footer :: footer"></footer>
