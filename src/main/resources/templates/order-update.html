@@ -24,7 +24,7 @@
 </form>
 <div th:each="el : ${order.orderDetails}" class = "alert alert-info mt-2">
     <div th:each="img : ${el.product.images}">
-        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px">
+        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px"> <br> <br>
     </div>
     <h3 th:text="${el.product.name}"/>
     <p th:text="${el.product.price}"/>

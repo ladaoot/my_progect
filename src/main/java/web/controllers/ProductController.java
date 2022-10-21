@@ -1,5 +1,7 @@
 package web.controllers;
 
+import lombok.SneakyThrows;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import web.models.Image;
 import web.models.Product;
+import web.repository.ImageRepository;
 import web.repository.ProductRepository;
+import web.service.ImageService;
 import web.service.ProductService;
 import web.service.UserService;
 
@@ -32,6 +36,9 @@ public class ProductController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping("/products")
     @Transactional
@@ -71,6 +78,56 @@ public class ProductController {
         return "product-info";
     }
 
+    @PostMapping("/products/{id}/delete")
+    public String deleteProduct(Model model, Principal principal,@PathVariable("id") Long id){
+
+        model.addAttribute("user",userService.getUserByPrincipal(principal));
+        productService.deleteProduct(id);
+        return "redirect:/products";
+
+    }
+
+    @GetMapping("/products/{id}/update")
+    public String updateProduct(Model model, Principal principal,@PathVariable("id") Long id){
+        model.addAttribute("user", userService.getUserByPrincipal(principal));
+        model.addAttribute("product",productService.getProductById(id));
+        return "product-update";
+    }
+
+    @PostMapping("/products/{id}/update")
+    @Transactional
+    public String updatingProduct (Product product, @RequestParam("file")MultipartFile file) throws IOException {
+
+        Product product1 = productRepository.findById(product.getId()).get();
+        product.setImages(product1.getImages());
+
+        if(file.getBytes().length==0){
+            productRepository.save(product);
+        }else {
+            Image image = new Image();
+            image = productService.toImageEntity(file);
+
+            product.addImageToProduct(image);
+            productRepository.save(product);
+        }
+
+        return "redirect:/products";
+
+    }
+
+    @SneakyThrows
+    @PostMapping("/products/{id}/delete_img/{img_id}")
+    public String deleteImgInProduct(Model model,Principal principal,
+                                     @PathVariable("id") Long productId,
+                                     @PathVariable("img_id") Long imgId){
+        Product product = productRepository.findById(productId).get();
+        Image image = imageService.findImgById(imgId);
+        product.getImages().remove(image);
+        imageService.deleteImg(image);
+
+        return "redirect:/products/{id}/update";
+
+    }
 }
 
 

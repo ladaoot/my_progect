@@ -17,7 +17,7 @@ User:<p th:text="${order.user.username}"/>
 
 <div th:each="detail : ${order.orderDetails}">
     <div th:each="img : ${detail.product.images}">
-        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px" >
+        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px" ><br> <br>
     </div>
     <h3 th:text="${detail.product.name}"/>
     Price: <p th:text="${detail.product.price}"/>

@@ -9,7 +9,7 @@
 <header th:insert="basicComponent/header :: header"></header>
 
     <div th:each="img : ${images}">
-        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px">
+        <img th:src="'/images/'+${img.id}" alt="Something wrong" height="100px"><br><br>
     </div>
 
     <h3 th:text="${el.name}"/>
@@ -21,8 +21,12 @@
 </form>
 
 <div th:each="role : ${user.roles}">
-    <a th:href = "'/products/'+${el.id}+'/delete'"  th:if="${role.name().equals('ADMIN')}">Delete product</a>
-    <a th:href = "'/products/'+${el.id}+'/update'" th:if="${role.name().equals('ADMIN')}">Update product</a>
+    <form th:action="'/products/'+${el.id}+'/delete'" method="post" th:if="${role.name().equals('ADMIN')}">
+        <input type="submit" value="Delete product">
+    </form>
+    <form th:action="'/products/'+${el.id}+'/update'" method="get" th:if="${role.name().equals('ADMIN')}" >
+        <input type="submit" value="Update product">
+    </form>
 </div>
 <footer th:insert="basicComponent/footer :: footer"></footer>
 </body>
