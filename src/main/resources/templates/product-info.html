@@ -15,10 +15,18 @@
     <h3 th:text="${el.name}"/>
     <p th:text="${el.price}"/>
 <h4 th:text ="${el.description}"/>
-
+<p>Categories: </p>
+<div th:if="${not el.categories.isEmpty()}">
+    <p text="Categories :"/>
+    <div th:each="category : ${el.categories}">
+        <label th:text="'- '+${category.title}"/>
+    </div>
+</div>
 <form th:action="'user/'+${user.id}+'/bucket/add/'+${el.id}" method="post">
     <button type="submit">Add to bucket</button>
 </form>
+
+
 
 <div th:each="role : ${user.roles}">
     <form th:action="'/products/'+${el.id}+'/delete'" method="post" th:if="${role.name().equals('ADMIN')}">

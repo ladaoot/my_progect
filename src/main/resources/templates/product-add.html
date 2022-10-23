@@ -13,6 +13,11 @@
     Описание товара: <input type="text" name="description"/><br><br>
     Цена: <input type="number" name="price"/><br><br>
     Фотография товара: <input type="file" name="file"/><br><br>
+    <p>Categories: </p>
+    <div th:each="category : ${categoriesList}" th:object="${product}">
+        <input type="checkbox" th:field="*{categories}" th:value="${category.title}" />
+        <label th:text="${category.title}"/>
+    </div>
     <input type="submit" value="Добавить товар"/>
 </form>
 <footer th:insert="basicComponent/footer :: footer"></footer>

@@ -13,6 +13,17 @@
     Описание товара: <input type="text" name="description" th:value="${product.description}"/><br><br>
     Цена: <input type="number" name="price" th:value="${product.price}"/><br><br>
 
+    <p>Categories: </p>
+    <div th:each="category : ${categoriesList}" th:object="${product}">
+        <div th:if="${product.categories.contains(category)}">
+        <input type="checkbox" th:field="*{categories}" th:value="${category.title}"  checked/>
+        </div>
+        <div th:unless="${product.categories.contains(category)}">
+            <input type="checkbox" th:field="*{categories}" th:value="${category.title}" />
+        </div>
+        <label th:text="${category.title}"/>
+    </div>
+
     Добавить фотографию: <input type="file" name="file" /><br><br>
     <input type="submit" value="Update product"/>
 </form>

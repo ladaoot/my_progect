@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class Product {
 
     private Integer price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Image> images = new ArrayList<>();
 
     @ManyToMany
@@ -41,6 +44,8 @@ public class Product {
         images.add(image);
 
     }
+
+
 }
 
 

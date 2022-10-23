@@ -36,6 +36,8 @@ public class ProductController {
 
     private boolean isCategoryOnn=false;
 
+    private List<Product> productList= new ArrayList<>();
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -59,9 +61,11 @@ public class ProductController {
 
         if(!isCategoryOnn) {
             ArrayList<Product> products = (ArrayList<Product>) productRepository.findAll();
-            model.addAttribute("products", products);
+            productList=products;
+
         }
 
+        model.addAttribute("products", productList);
         List<Category> categoryList = (List<Category>) categoryRepository.findAll();
 
         model.addAttribute("categories",categoryList);
@@ -80,14 +84,29 @@ public class ProductController {
         isCategoryOnn=true;
         List<Product> products = (ArrayList<Product>) productRepository.findAll();
         products = products.stream()
-                .filter(product -> product.getCategories().contains(categoryArrayList))
+                .filter(product -> {
+                    for ( Category category:categoryArrayList) {
+                        if(!product.getCategories().contains(category)){
+                            return false;
+                        }
+                    }
+                    return true;
+                })
                 .collect(Collectors.toList());
+
+        productList=products;
         model.addAttribute("products",products);
         return "redirect:/products";
     }
 
     @GetMapping("/products/add")
     public String addProduct(Model model,Principal principal){
+
+        List<Category> categoryList = (List<Category>) categoryRepository.findAll();
+
+        model.addAttribute("categoriesList",categoryList);
+
+        model.addAttribute("product",new Product());
 
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         return "product-add";
@@ -123,6 +142,10 @@ public class ProductController {
 
     @GetMapping("/products/{id}/update")
     public String updateProduct(Model model, Principal principal,@PathVariable("id") Long id){
+
+        List<Category> categoryList = (List<Category>) categoryRepository.findAll();
+
+        model.addAttribute("categoriesList",categoryList);
         model.addAttribute("user", userService.getUserByPrincipal(principal));
         model.addAttribute("product",productService.getProductById(id));
         return "product-update";
